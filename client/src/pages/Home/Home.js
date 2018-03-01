@@ -1,11 +1,9 @@
 import React, { Component } from "react";
-import DeleteBtn from "../../components/DeleteBtn";
-import Jumbotron from "../../components/Jumbotron";
 import API from "../../utils/API";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import { Col, Row, Container } from "../../components/Grid";
-import { List, ListItem } from "../../components/List";
-import { Input, TextArea, FormBtn } from "../../components/Form";
+// import { List, ListItem } from "../../components/List";
+// import { Input, TextArea, FormBtn } from "../../components/Form";
 
 class Home extends Component {
   state = {
@@ -82,15 +80,13 @@ class Home extends Component {
     event.preventDefault();
     if ((this.state.topic && this.state.begin_date && this.state.end_date)) {
       API.searchArticles({
-        // title: this.state.title,
-        // date: this.state.date,
-        // url: this.state.url
         topic:      this.state.topic,
         begin_date: this.state.begin_date,
         end_date:   this.state.end_date
       })
         .then(res => {
-            this.setState({articles: res.response.docs})
+            console.log(res);
+            this.setState({articles: res.data.response.docs})
         }
         )
         .catch(err => console.log(err));
@@ -99,70 +95,83 @@ class Home extends Component {
 
 
   handleSaveClicked = event => {
-    event.preventDefault();
-    if ((this.state.topic && this.state.begin_date && this.state.end_date)) {
-      API.saveArticle({
-        // this info has to come from axios???  or from this.state??
-        headline: this.state.headline,
-        snippet:  this.state.snippet,
-        pub_date: this.state.pub_date,
-        url:      this.state.url_date
-        //   headline:    response.docs[].headline.main,
-        //   snippet:     response.docs[].snippet
-        //   pub_date:    response.docs[].pub_date,
-        //   url:         response.docs[].web_url
-      })
-        .then(res => this.loadArticles())
+    // if ((this.state.topic && this.state.begin_date && this.state.end_date)) {
+    console.log("This is the event headline passed: " + event.headline);
+    console.log("This is the snippet headline passed: " + event.snippet);
+    console.log("This is the pub_date headline passed: " + event.pub_date);
+    console.log("This is the url headline passed: " + event.url);
+    console.log("This is the saved_date headline passed: " + new Date().toLocaleString());
+
+        API.saveArticle({
+        headline: event.headline,
+        snippet:  event.snippet,
+        pub_date: event.pub_date,
+        url:      event.url_date,
+        saved_date: new Date().toLocaleString()
+    })
+    // After save, do nothing
+        // .then(res => this.loadArticles())
+        .then(res => console.log("SEND TO API CONFIRMED"))
         .catch(err => console.log(err));
-    }
+    // }
   };
 
   render() {
+      console.log(this.state.articles);
     return (
       <Container fluid>
         <Row>
           <Col size="md-12">
-            <Jumbotron>
-              <h1>Search Articles</h1>
-            </Jumbotron>
+            <div className="jumbotron">
+                <h2>Search Articles</h2>
+            </div>
             <form>
               <input value={this.state.topic} onChange={this.handleInputChange} name="topic" placeholder="Topic (required)"></input> 
 
-              <input value={this.state.topic} onChange={this.handleInputChange} name="topic" placeholder="Topic (required)"></input> 
+              <input value={this.state.begin_date} onChange={this.handleInputChange} name="begin_date" placeholder="Begin Date - YYYYMMDD (required)"></input> 
 
-              <Input
-                value={this.state.begin_date}
-                onChange={this.handleInputChange}
-                name="begin_date"
-                placeholder="Begin Date (required)"
-              />
-              <Input
-                value={this.state.end_date}
-                onChange={this.handleInputChange}
-                name="end_date"
-                placeholder="End Date (required)"
-              />
-              {/* fix button */}
-              <FormBtn
-                disabled={!(this.state.topic && this.state.begin_date && this.state.end_date)}
-                onClick={this.handleFormSubmit}
-              >
-                Submit
-              </FormBtn>
+              <input value={this.state.end_date} onChange={this.handleInputChange} name="end_date" placeholder="End Date - YYYYMMDD (required)"></input> 
+              
+              <button onClick={this.handleFormSubmit} disabled={!(this.state.topic && this.state.begin_date && this.state.end_date)} className="btn-primary">Submit</button>
             </form>
           </Col>
         </Row>
 
         <Row>
           <Col size="md-12">
-            <Jumbotron>
-              <h1>Results</h1>
-            </Jumbotron>
-            {this.state.articles.length ? (
+            <div className="jumbotron">
+                <h2>Search Results</h2>
+            </div>
+
+            {this.state.articles.map((singleArticle) => {
+                return (
+                <div className="panel panel-primary" key={singleArticle._id}>
+                    <div className="panel-heading">
+                        <button onClick={() => {this.handleSaveClicked({
+                            // article_id: this.singleArticle._id,
+                            headline: singleArticle.headline.main,
+                            snippet:  singleArticle.snippet,
+                            pub_date: singleArticle.pub_date,
+                            url:      singleArticle.web_url,
+                            // today:    
+                        })}} className="btn-primary pull-right">Save</button>
+                        <h3 className="panel-title">{singleArticle.headline.main}</h3>
+                    </div>
+
+                    <div className="panel-body">
+                        <h4>{singleArticle.snippet}</h4>
+                        <h5>{singleArticle.web_url}</h5>
+                    </div>    
+
+                    {/* <LetterBox onClick={() => {davidsOnCLick({headline: singleArticle.headline, pubDate: singleArticle.pubDate})}}/> */}
+                </div>
+                )
+            })}
+            {/* {this.state.articles.length ? (
               <List>
-                {this.state.articles.map(book => (
-                  <ListItem key={articles._id}>
-                    <Link to={"/articles/" + articles._id}>
+                {this.state.articles.map(article => (
+                  <ListItem key={article._id}>
+                    <Link to={"/article/" + article._id}>
                       <strong>
                         {article.title} by {article.date}
                       </strong>
@@ -173,7 +182,7 @@ class Home extends Component {
               </List>
             ) : (
               <h3>No Results to Display</h3>
-            )}
+            )} */}
           </Col>
         </Row>
       </Container>

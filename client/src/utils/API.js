@@ -15,26 +15,34 @@ export default {
   },
   // Saves a article to the database
   saveArticle: function(articleData) {
+    console.log("This is the articleData headline received by API: " + articleData.headline);
+    console.log("This is the articleData snippet received by API: " + articleData.snippet);
+    console.log("This is the articleData pub_date received by API: " + articleData.pub_date);
+    console.log("This is the articleData headline received by API: " + articleData.url);
+    console.log("This is the articleData headline received by API: " + articleData.saved_date);
     return axios.post("/api/articles", articleData);
   },
 
-  // NOT NEEDED
-  // Searchs NY Times for a article of a given topic
-//   searchArticles: function(searchData) {
-//     return axios.get("https://api.nytimes.com/svc/search/v2/articlesearch.json", searchData);
-//   }
-// };
-
-
 
   searchArticles: function(searchData) {
-    var url = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
-    url += '?' + $.param({
-    'api-key': "7ef710c13ca94bb784fbb4c4fc064c9c",
-      'q': topic,
-      'begin_date': begin_date,
-      'end_date': end_date
-    });
+    // console.log("This is searchData.topic: " + searchData.topic);
+    // console.log("This is searchData.begin_date: " + searchData.begin_date);
+    // console.log("This is searchData.end_date: " + searchData.end_date);
+
+    // var topic = "q=" + searchData.topic + "&";
+    // var beginDate = "begin_date=" + searchData.begin_date + "&";
+    // var endDate = "begin_date=" + searchData.begin_date + "&";
+    // var url = "https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=7ef710c13ca94bb784fbb4c4fc064c9c&" + topic + beginDate + endDate + "&sort=newest";
+
+    // console.log("This is the url: " + url);
+    var url = "https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=7ef710c13ca94bb784fbb4c4fc064c9c&q=trump&begin_date=20100101&end_date=20150101&sort=newest";
+    // var url = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
+    // url += '?' + $.param({
+    // 'api-key': "7ef710c13ca94bb784fbb4c4fc064c9c",
+    //   'q': topic,
+    //   'begin_date': begin_date,
+    //   'end_date': end_date
+    // });
     return axios.get(url);
   }
 }
