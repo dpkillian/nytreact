@@ -106,7 +106,7 @@ class Home extends Component {
         headline: event.headline,
         snippet:  event.snippet,
         pub_date: event.pub_date,
-        url:      event.url_date,
+        url:      event.url,
         saved_date: new Date().toLocaleString()
     })
     // After save, do nothing
@@ -122,67 +122,76 @@ class Home extends Component {
       <Container fluid>
         <Row>
           <Col size="md-12">
-            <div className="jumbotron">
-                <h2>Search Articles</h2>
+            <div className="panel panel-primary">
+                <div className="panel-heading">
+                    <h2>Search Articles</h2>
+                </div>
+
+                <div className="panel-body">
+                    <form>
+                    <input value={this.state.topic} onChange={this.handleInputChange} name="topic" placeholder="Topic"></input> 
+
+                    <input value={this.state.begin_date} onChange={this.handleInputChange} name="begin_date" placeholder="Start - YYYYMMDD"></input> 
+
+                    <input value={this.state.end_date} onChange={this.handleInputChange} name="end_date" placeholder="End - YYYYMMDD"></input> 
+                    
+                    <button onClick={this.handleFormSubmit} disabled={!(this.state.topic && this.state.begin_date && this.state.end_date)} className="btn-primary pull-right">Submit</button>
+                    </form>
+                </div>
             </div>
-            <form>
-              <input value={this.state.topic} onChange={this.handleInputChange} name="topic" placeholder="Topic (required)"></input> 
-
-              <input value={this.state.begin_date} onChange={this.handleInputChange} name="begin_date" placeholder="Begin Date - YYYYMMDD (required)"></input> 
-
-              <input value={this.state.end_date} onChange={this.handleInputChange} name="end_date" placeholder="End Date - YYYYMMDD (required)"></input> 
-              
-              <button onClick={this.handleFormSubmit} disabled={!(this.state.topic && this.state.begin_date && this.state.end_date)} className="btn-primary">Submit</button>
-            </form>
           </Col>
         </Row>
 
         <Row>
           <Col size="md-12">
-            <div className="jumbotron">
-                <h2>Search Results</h2>
+            <div className="panel panel-primary">
+                <div className="panel-heading">
+                    <h2>Search Results</h2>
+                </div>
+                <br></br>
+                {this.state.articles.map((singleArticle) => {
+                    return (
+                    <div className="panel panel-primary" key={singleArticle._id}>
+                        <div className="panel-heading">
+                            <button onClick={() => {this.handleSaveClicked({
+                                // article_id: this.singleArticle._id,
+                                headline: singleArticle.headline.main,
+                                snippet:  singleArticle.snippet,
+                                pub_date: singleArticle.pub_date,
+                                url:      singleArticle.web_url,
+                            })}} className="btn-primary pull-right">Save</button>
+                            <h3 className="panel-title">{singleArticle.headline.main}</h3>
+                        </div>
+
+                        <div className="panel-body">
+                            <h4>{singleArticle.snippet}</h4>
+                            <h5>{singleArticle.web_url}</h5>
+                        </div>    
+
+                        {/* <LetterBox onClick={() => {davidsOnCLick({headline: singleArticle.headline, pubDate: singleArticle.pubDate})}}/> */}
+                    </div>
+                    )
+                })}
+
+                {/* {this.state.articles.length ? (
+                <List>
+                    {this.state.articles.map(article => (
+                    <ListItem key={article._id}>
+                        <Link to={"/article/" + article._id}>
+                        <strong>
+                            {article.title} by {article.date}
+                        </strong>
+                        </Link>
+                        <DeleteBtn onClick={() => this.unsaveArticle(article._id)} />
+                    </ListItem>
+                    ))}
+                </List>
+                ) : (
+                <h3>No Results to Display</h3>
+                )} */}
             </div>
 
-            {this.state.articles.map((singleArticle) => {
-                return (
-                <div className="panel panel-primary" key={singleArticle._id}>
-                    <div className="panel-heading">
-                        <button onClick={() => {this.handleSaveClicked({
-                            // article_id: this.singleArticle._id,
-                            headline: singleArticle.headline.main,
-                            snippet:  singleArticle.snippet,
-                            pub_date: singleArticle.pub_date,
-                            url:      singleArticle.web_url,
-                            // today:    
-                        })}} className="btn-primary pull-right">Save</button>
-                        <h3 className="panel-title">{singleArticle.headline.main}</h3>
-                    </div>
 
-                    <div className="panel-body">
-                        <h4>{singleArticle.snippet}</h4>
-                        <h5>{singleArticle.web_url}</h5>
-                    </div>    
-
-                    {/* <LetterBox onClick={() => {davidsOnCLick({headline: singleArticle.headline, pubDate: singleArticle.pubDate})}}/> */}
-                </div>
-                )
-            })}
-            {/* {this.state.articles.length ? (
-              <List>
-                {this.state.articles.map(article => (
-                  <ListItem key={article._id}>
-                    <Link to={"/article/" + article._id}>
-                      <strong>
-                        {article.title} by {article.date}
-                      </strong>
-                    </Link>
-                    <DeleteBtn onClick={() => this.unsaveArticle(article._id)} />
-                  </ListItem>
-                ))}
-              </List>
-            ) : (
-              <h3>No Results to Display</h3>
-            )} */}
           </Col>
         </Row>
       </Container>
