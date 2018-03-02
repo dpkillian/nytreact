@@ -83,27 +83,17 @@ class Saved extends Component {
   };
 
 
-  handleDeleteClicked = event => {
+  handleDeleteClicked = id => {
     // if ((this.state.topic && this.state.begin_date && this.state.end_date)) {
-    console.log("This is the event headline passed: " + event.headline);
-    console.log("This is the snippet headline passed: " + event.snippet);
-    console.log("This is the pub_date headline passed: " + event.pub_date);
-    console.log("This is the url headline passed: " + event.url);
-    console.log("This is the saved_date headline passed: " + new Date().toLocaleString());
+    console.log("This is the event headline passed: " + id);
 
-        API.saveArticle({
-        headline: event.headline,
-        snippet:  event.snippet,
-        pub_date: event.pub_date,
-        url:      event.url,
-        saved_date: new Date().toLocaleString()
-    })
+        API.deleteArticle(id)
     // After save, do nothing
-        // .then(res => this.loadArticles())
-        .then(res => {
-            // this.setState({ isSaved: true })
-            console.log("SEND TO API CONFIRMED")
-        })
+        .then(res => this.loadArticles())
+        // .then(res => {
+        //     // this.setState({ isSaved: true })
+        //     console.log("SEND TO API CONFIRMED")
+        // })
         .catch(err => console.log(err));
     // }
   };
@@ -145,13 +135,7 @@ class Saved extends Component {
                     return (
                     <div className="panel panel-primary" key={singleArticle._id}>
                         <div className="panel-heading">
-                            <button onClick={() => {this.handleDeleteClicked({
-                                // article_id: this.singleArticle._id,
-                                headline: singleArticle.headline.main,
-                                snippet:  singleArticle.snippet,
-                                pub_date: singleArticle.pub_date,
-                                url:      singleArticle.url,
-                            })}} className="btn-primary pull-right">Delete</button>
+                            <button onClick={() => {this.handleDeleteClicked(singleArticle._id)}} className="btn-primary pull-right">Delete</button>
                             <h3 className="panel-title">{singleArticle.headline}</h3>
                         </div>
 

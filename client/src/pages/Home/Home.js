@@ -168,7 +168,6 @@ class Home extends Component {
                     </div>
                     )
                 })}
-
                 {/* {this.state.articles.length ? (
                 <List>
                     {this.state.articles.map(article => (

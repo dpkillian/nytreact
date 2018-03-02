@@ -10,7 +10,7 @@ const Nav = () =>
           <span className="icon-bar" />
         </button>
         <a href="/" className="navbar-brand">
-          New York Times Article Scrubber
+          New York Times Article Search
         </a>
       </div>
     </div>
