@@ -1,9 +1,7 @@
 import React, { Component } from "react";
+import {withRouter} from "react-router-dom";
 import API from "../../utils/API";
-// import { Link } from "react-router-dom";
 import { Col, Row, Container } from "../../components/Grid";
-// import { List, ListItem } from "../../components/List";
-// import { Input, TextArea, FormBtn } from "../../components/Form";
 
 class Home extends Component {
   state = {
@@ -11,56 +9,12 @@ class Home extends Component {
     begin_date: "",
     end_date: "",
     topic: "",
-    // are headline, snippet, pub_date, url in "articles[], above?"
-    // articles[0].response.docs[].headline.main
-    // articles[0].response.docs[].snippet
-    // articles[0].response.docs[].pub_date,
-    // articles[0].response.docs[].web_url
-    // headline: "",
-    // snippet: "",
-    // pub_date: "",
-    // url: ""
   };
 
   componentDidMount() {
-    // don't want to do anything?  
+    // don't want to do anything? No, I don't think so. 
     // this.loadArticles();
   }
-
-//   loadArticles = () => {
-//     API.getArticles()
-//       .then(res =>
-//         // this is where I have to define objects in the article[] array
-//         this.setState({ articles: res.data, title: "", date: "", url: "" })
-//       )
-//       .catch(err => console.log(err));
-//   };
-
-//   seachForArticles = () => {
-//     const searchData = {
-//         topic:      this.state.topic,
-//         begin_date: this.state.begin_date,
-//         end_date:   this.state.end_date    
-//     }
-//     API.searchArticles()
-//       .then(res =>
-//         // this is where I have to define objects in the article[] array, right?
-//         // do I have the format correct below?  res.data.docs[]??
-//         this.setState({ 
-//             articles: res.data,
-//             headline: res.data.docs[].headline.main,
-//             pub_date: "",
-//             snippet: "",
-//             url: "" })
-//       )
-//       .catch(err => console.log(err));
-//   };
-
-//   unsaveArticle = id => {
-//     API.deleteArticle(id)
-//       .then(res => this.loadArticles())
-//       .catch(err => console.log(err));
-//   };
 
   handleInputChange = event => {
     const { name, value } = event.target;
@@ -88,13 +42,6 @@ class Home extends Component {
 
 
   handleSaveClicked = event => {
-    // if ((this.state.topic && this.state.begin_date && this.state.end_date)) {
-    console.log("This is the event headline passed: " + event.headline);
-    console.log("This is the snippet headline passed: " + event.snippet);
-    console.log("This is the pub_date headline passed: " + event.pub_date);
-    console.log("This is the url headline passed: " + event.url);
-    console.log("This is the saved_date headline passed: " + new Date().toLocaleString());
-
         API.saveArticle({
         headline: event.headline,
         snippet:  event.snippet,
@@ -102,8 +49,7 @@ class Home extends Component {
         url:      event.url,
         saved_date: new Date().toLocaleString()
     })
-    // After save, do nothing
-        // .then(res => this.loadArticles())
+    // After save, need to add UI handling to inform user that the article was saved
         .then(res => {
             // this.setState({ isSaved: true })
             console.log("SEND TO API CONFIRMED")
@@ -111,6 +57,10 @@ class Home extends Component {
         .catch(err => console.log(err));
     // }
   };
+
+  handleSavedArticles = () => {
+    this.props.history.push("/articles");
+}
 
   render() {
       console.log(this.state.articles);
@@ -127,10 +77,12 @@ class Home extends Component {
                     <form>
                     <input value={this.state.topic} onChange={this.handleInputChange} name="topic" placeholder="Topic"></input> 
 
-                    <input value={this.state.begin_date} onChange={this.handleInputChange} name="begin_date" placeholder="Start - YYYYMMDD"></input> 
+                    <input value={this.state.begin_date} onChange={this.handleInputChange} name="begin_date" placeholder="Start: YYYYMMDD"></input> 
 
-                    <input value={this.state.end_date} onChange={this.handleInputChange} name="end_date" placeholder="End - YYYYMMDD"></input> 
+                    <input value={this.state.end_date} onChange={this.handleInputChange} name="end_date" placeholder="End: YYYYMMDD"></input> 
                     
+                    <button onClick={this.handleSavedArticles} className="btn-success pull-right">Saved Articles</button>
+
                     <button onClick={this.handleFormSubmit} disabled={!(this.state.topic && this.state.begin_date && this.state.end_date)} className="btn-primary pull-right">Submit</button>
                     </form>
                 </div>
@@ -164,28 +116,11 @@ class Home extends Component {
                             <h5>{singleArticle.web_url}</h5>
                         </div>    
 
-                        {/* <LetterBox onClick={() => {davidsOnCLick({headline: singleArticle.headline, pubDate: singleArticle.pubDate})}}/> */}
                     </div>
                     )
                 })}
-                {/* {this.state.articles.length ? (
-                <List>
-                    {this.state.articles.map(article => (
-                    <ListItem key={article._id}>
-                        <Link to={"/article/" + article._id}>
-                        <strong>
-                            {article.title} by {article.date}
-                        </strong>
-                        </Link>
-                        <DeleteBtn onClick={() => this.unsaveArticle(article._id)} />
-                    </ListItem>
-                    ))}
-                </List>
-                ) : (
-                <h3>No Results to Display</h3>
-                )} */}
-            </div>
 
+            </div>
 
           </Col>
         </Row>
@@ -198,4 +133,3 @@ export default Home;
 
 
 
-// })}} className="btn-primary pull-right" {this.state.isSaved? disabled: null}>{ this.state.isSaved? Saved : Save}</button>
