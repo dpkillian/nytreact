@@ -10,7 +10,7 @@ This application is built using React, Node.js Express, Bootstrap v3.  It runs i
 After invoking yarn start (node server.js), a broswer window will open with the following address  (localhost:3000), and the user will be able to do a custom search.  After which, they will presented with the following results search screen.
 
 Main screen of nyreact
-![Main Screen 1](./public/nyreact.jpeg)
+![Main Screen 1](./client/public/nyreact.jpeg)
 
 
 
