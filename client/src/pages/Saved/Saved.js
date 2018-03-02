@@ -2,39 +2,35 @@ import React, { Component } from "react";
 import API from "../../utils/API";
 // import { Link } from "react-router-dom";
 import { Col, Row, Container } from "../../components/Grid";
-// import { List, ListItem } from "../../components/List";
+import { List, ListItem } from "../../components/List";
 // import { Input, TextArea, FormBtn } from "../../components/Form";
 
-class Home extends Component {
+class Saved extends Component {
   state = {
     articles: [],
-    begin_date: "",
-    end_date: "",
-    topic: "",
-    // are headline, snippet, pub_date, url in "articles[], above?"
-    // articles[0].response.docs[].headline.main
-    // articles[0].response.docs[].snippet
-    // articles[0].response.docs[].pub_date,
-    // articles[0].response.docs[].web_url
-    // headline: "",
-    // snippet: "",
-    // pub_date: "",
-    // url: ""
+    headline: "",
+    snippet: "",
+    pub_date: "",
+    url: "",
   };
 
   componentDidMount() {
-    // don't want to do anything?  
-    // this.loadArticles();
+    this.loadArticles();
   }
 
-//   loadArticles = () => {
-//     API.getArticles()
-//       .then(res =>
-//         // this is where I have to define objects in the article[] array
-//         this.setState({ articles: res.data, title: "", date: "", url: "" })
-//       )
-//       .catch(err => console.log(err));
-//   };
+  loadArticles = () => {
+    API.getArticles()
+      .then(res =>
+        // this is where I have to define objects in the article[] array
+        this.setState({ 
+            articles: res.data,
+            headline: "",
+            snippet: "",
+            pub_date: "",
+            url: "" })
+      )
+      .catch(err => console.log(err));
+  };
 
 //   seachForArticles = () => {
 //     const searchData = {
@@ -87,7 +83,7 @@ class Home extends Component {
   };
 
 
-  handleSaveClicked = event => {
+  handleDeleteClicked = event => {
     // if ((this.state.topic && this.state.begin_date && this.state.end_date)) {
     console.log("This is the event headline passed: " + event.headline);
     console.log("This is the snippet headline passed: " + event.snippet);
@@ -116,11 +112,11 @@ class Home extends Component {
       console.log(this.state.articles);
     return (
       <Container fluid>
-        <Row>
+        {/* <Row>
           <Col size="md-12">
             <div className="panel panel-primary">
                 <div className="panel-heading">
-                    <h2>Search Articles</h2>
+                    <h2>Saved Articles</h2>
                 </div>
 
                 <div className="panel-body">
@@ -136,32 +132,33 @@ class Home extends Component {
                 </div>
             </div>
           </Col>
-        </Row>
+        </Row> */}
 
         <Row>
           <Col size="md-12">
             <div className="panel panel-primary">
                 <div className="panel-heading">
-                    <h2>Search Results</h2>
+                    <h2>Saved Articles</h2>
                 </div>
                 <br></br>
                 {this.state.articles.map((singleArticle) => {
                     return (
                     <div className="panel panel-primary" key={singleArticle._id}>
                         <div className="panel-heading">
-                            <button onClick={() => {this.handleSaveClicked({
+                            <button onClick={() => {this.handleDeleteClicked({
                                 // article_id: this.singleArticle._id,
                                 headline: singleArticle.headline.main,
                                 snippet:  singleArticle.snippet,
                                 pub_date: singleArticle.pub_date,
-                                url:      singleArticle.web_url,
-                            })}} className="btn-primary pull-right">Save</button>
-                            <h3 className="panel-title">{singleArticle.headline.main}</h3>
+                                url:      singleArticle.url,
+                            })}} className="btn-primary pull-right">Delete</button>
+                            <h3 className="panel-title">{singleArticle.headline}</h3>
                         </div>
 
                         <div className="panel-body">
                             <h4>{singleArticle.snippet}</h4>
-                            <h5>{singleArticle.web_url}</h5>
+                            <h5>{singleArticle.url}</h5>
+                            <h5>Date Published: {singleArticle.pub_date}</h5>
                         </div>    
 
                         {/* <LetterBox onClick={() => {davidsOnCLick({headline: singleArticle.headline, pubDate: singleArticle.pubDate})}}/> */}
@@ -195,7 +192,7 @@ class Home extends Component {
   }
 }
 
-export default Home;
+export default Saved;
 
 
 
